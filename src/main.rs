@@ -14,7 +14,7 @@ use std::io::{self, Write, BufWriter};
 
 fn main() {
     let matches = App::new("pipe fitting")
-        .version("0.1")
+        .version("0.2.0")
         .author("Gary Pennington <garypen@gmail.com>")
         .about("tee, but rustee")
         .arg(Arg::with_name("append")
@@ -39,7 +39,8 @@ fn main() {
                                                 signal::SaFlags::empty(),
                                                 signal::SigSet::empty());
         unsafe {
-            signal::sigaction(signal::SIGINT, &sig_action).unwrap();
+            signal::sigaction(signal::SIGINT, &sig_action)
+                .expect("Failed to ignore SIGINT!");
         }
     }
 
@@ -62,17 +63,21 @@ fn main() {
             if el == "-" {
                 writers.push(BufWriter::new(Box::new(io::stdout())));
             } else {
-                writers.push(BufWriter::new(Box::new(fopts.open(el).unwrap())));
+                writers.push(BufWriter::new(Box::new(fopts.open(el)
+                                                     .expect(&format!("Failed to open {}!", el)))));
             }
         }
         let mut input = String::new();
-        while stdin.read_line(&mut input).unwrap() > 0 {
+        while stdin.read_line(&mut input)
+            .expect("Failed to read input line!") > 0 {
             for mut writer in &mut writers {
-                writer.write(&mut input.as_bytes()).unwrap();
+                writer.write(&mut input.as_bytes())
+                    .expect("Failed to write output line");
             }
             input.clear();
         }
     } else {
-        io::copy(&mut stdin, &mut stdout).unwrap();
+        io::copy(&mut stdin, &mut stdout)
+            .expect("Failed to copy input to output");
     }
 }
