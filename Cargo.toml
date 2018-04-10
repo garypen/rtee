@@ -1,0 +1,11 @@
+[package]
+name = "rtee"
+version = "0.1.0"
+authors = ["Gary Pennington <garypen@gmail.com>"]
+description = "tee, but rustee"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+
+clap = "~2.31"
+nix = "0.10.0"
