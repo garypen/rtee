@@ -73,6 +73,8 @@ fn main() {
             for mut writer in &mut writers {
                 writer.write(&mut input.as_bytes())
                     .expect("Failed to write output line");
+                writer.flush()
+                    .expect("Failed to flush output line");;
             }
             input.clear();
         }
