@@ -57,7 +57,7 @@ fn main() {
     let mut stdout = io::stdout();
 
     if files.is_some() {
-        let mut writers: Vec<BufWriter<Box<Write>>> =
+        let mut writers: Vec<BufWriter<Box<dyn Write>>> =
             vec![BufWriter::new(Box::new(&mut stdout))];
         for el in files.unwrap() {
             if el == "-" {
@@ -70,7 +70,7 @@ fn main() {
         let mut input = String::new();
         while stdin.read_line(&mut input)
             .expect("Failed to read input line!") > 0 {
-            for mut writer in &mut writers {
+            for writer in &mut writers {
                 writer.write(&mut input.as_bytes())
                     .expect("Failed to write output line");
                 writer.flush()
