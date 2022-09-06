@@ -1,11 +1,16 @@
 [package]
 name = "rtee"
-version = "0.2.2"
+version = "0.2.3"
 authors = ["Gary Pennington <garypen@gmail.com>"]
 description = "tee, but rustee"
 license = "MIT OR Apache-2.0"
+repository = "https://github.com/garypen/rtee"
+readme = "README.md"
+keywords = ["io"]
+categories = ["command-line-utilities"]
+edition = "2021"
 
 [dependencies]
 
-clap = "^2.32.0"
-nix = "^0.13.0"
+clap = { version = "3.2.20", features = ["cargo"] }
+nix = "0.20.2"
