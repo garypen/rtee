@@ -1,6 +1,6 @@
 [package]
 name = "rtee"
-version = "0.2.3"
+version = "0.2.4"
 authors = ["Gary Pennington <garypen@gmail.com>"]
 description = "tee, but rustee"
 license = "MIT OR Apache-2.0"
