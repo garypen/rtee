@@ -4,41 +4,46 @@
 //! files.
 //!
 
-extern crate clap;
-extern crate nix;
-
-use clap::{App, Arg};
-use nix::sys::signal;
 use std::fs::OpenOptions;
 use std::io::{self, BufWriter, Write};
 
+use clap::arg;
+use clap::command;
+use clap::ArgAction;
+
+use nix::sys::signal;
+
 fn main() {
-    let matches = App::new("pipe fitting")
-        .version(clap::crate_version!())
-        .author("Gary Pennington <garypen@gmail.com>")
-        .about("tee, but rustee")
+    let matches = command!() // requires `cargo` feature
         .arg(
-            Arg::with_name("append")
-                .short('a')
-                .long("append")
-                .help("Append output rather than overwrite"),
+            arg!(
+                -a --append "Append output rather than overwrite"
+            )
+            .action(ArgAction::SetTrue),
         )
         .arg(
-            Arg::with_name("ignore")
-                .short('i')
-                .long("ignore")
-                .help("Ignore SIGINT"),
+            arg!(
+                -i --ignore "ignore SIGINT"
+            )
+            .action(ArgAction::SetTrue),
         )
         .arg(
-            Arg::with_name("file")
-                .help("Sets the output files to use")
-                .multiple(true),
+            arg!(
+                [file] "Sets the output files to use"
+            )
+            .action(ArgAction::Append),
         )
         .get_matches();
 
-    let ignore = matches.is_present("ignore");
-    let append = matches.is_present("append");
-    let files = matches.values_of("file");
+    let ignore = matches
+        .get_one::<bool>("ignore")
+        .cloned()
+        .unwrap_or_default();
+    let append = matches
+        .get_one::<bool>("append")
+        .cloned()
+        .unwrap_or_default();
+    let files = matches.get_many::<String>("file");
 
     if ignore {
         let sig_action = signal::SigAction::new(
